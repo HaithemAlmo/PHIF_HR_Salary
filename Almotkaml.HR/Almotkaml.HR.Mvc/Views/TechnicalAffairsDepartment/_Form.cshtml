@@ -1,0 +1,222 @@
+﻿@using Almotkaml.HR
+@model TechnicalAffairsDepartmentModel
+@{
+    ViewBag.Title = "إدارة الشؤون الفنية";
+    Html.EnableClientValidation(false);
+}
+
+
+@Html.AntiForgeryToken()
+
+<div class="row">
+    <div class="col-lg-12">
+        @Html.AjaxNote()
+
+        <div class="panel panel-default">
+            <div class="panel-heading">ادخال التقرير الشهري</div>
+            <div class="panel-body">
+
+                <fieldset>
+                    <legend>بيانات الموظف</legend>
+                    @Html.HiddenFor(model => model.TechnicalAffairsDepartmentId)
+                    <div class="panel-body">
+                        @Html.SavedModel(Model)
+
+
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.EntrantsAndReviewersId)
+                                <button type="button" class="field_text form-control" style="text-align: right" data-toggle="modal" data-target="#myModal">@Model.EmployeeName</button>
+                                @*@Html.ValidationMessageFor(model => model.EmployeeName)*@
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-group">
+                                @Html.Label("الفترة الزمنية (شهر/سنة)")
+                                <br />
+                                @Html.TextBoxFor(model => model.MonthWork, new { @class = "field_min form-control", style = "display:inline" }) /
+                                @Html.TextBoxFor(model => model.YearWork, new { @class = "field_min form-control", style = "display:inline" })
+                                @Html.ValidationMessage("")
+                            </div>
+                        </div>
+
+                    </div>
+                </fieldset>
+                <br />
+
+
+                <br />
+
+
+                <fieldset>
+                    <legend>نتائج العمل</legend>
+
+                    <div class="panel-body">
+                        @*@Html.SavedModel(Model)*@
+
+                        @if (Model.EntrantsAndReviewersType == EntrantsAndReviewersType.Entrant)
+                        {
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="form-group">
+                                    @Html.Label("إدخال بيانات (ورقة / الإجمالي)")
+                                    <br />
+                                    @Html.TextBoxFor(model => model.DataEntry, new { @class = "field_text form-control", style = "display:inline" })
+                                    @* @Html.TextBoxFor(model => model.DataEntryBalance, new { @class = "field_min form-control", style = "display:inline" })*@
+                                    @Html.ValidationMessage("")
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.EntrantsAndReviewersType == EntrantsAndReviewersType.Reviewer)
+                        {
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="form-group">
+                                    @Html.Label("مراجعة اولية (ملف / الإجمالي)")
+                                    <br />
+                                    @Html.TextBoxFor(model => model.FirstReview, new { @class = "field_text form-control", style = "display:inline" })
+                                    @* @Html.TextBoxFor(model => model.FirstReviewBalance, new { @class = "field_min form-control", style = "display:inline" })*@
+                                    @Html.ValidationMessage("")
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="form-group">
+                                    @Html.Label("مراجعة إيواء (ملف / الإجمالي)")
+                                    <br />
+                                    @Html.TextBoxFor(model => model.AccommodationReview, new { @class = "field_text form-control", style = "display:inline" })
+                                    @* @Html.TextBoxFor(model => model.AccommodationReviewBalance, new { @class = "field_min form-control", style = "display:inline" })*@
+                                    @Html.ValidationMessage("")
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="form-group">
+                                    @Html.Label("مراجعة عيادات (ملف / الإجمالي)")
+                                    <br />
+                                    @Html.TextBoxFor(model => model.ClincReview, new { @class = "field_text form-control", style = "display:inline" })
+                                    @* @Html.TextBoxFor(model => model.ClincReviewBalance, new { @class = "field_min form-control", style = "display:inline" })*@
+                                    @Html.ValidationMessage("")
+                                </div>
+                            </div>
+                        }
+
+
+
+
+                    </div>
+                </fieldset>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+
+                            <input name="save" type="submit" value="حفظ" class="btn btn-warning" />
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">@ViewBag.Title</div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table data-order='[]' class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <thead>
+                                    <tr>
+                                        <th>ر.ت</th>
+                                        <th>الاسم</th>
+                                        <th>الشهر</th>
+                                        <th>@Html.Show(Model.CanEdit)</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        var count = 0;
+                                    }
+                                    @foreach (var item in Model.TechnicalAffairsDepartmentGrid)
+                                    {
+                                        count++;
+                                        <tr class="odd gradeX">
+                                            <td>@count</td>
+
+                                            <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.MonthWork)</td>
+
+                                            <td>
+                                                <button name="editTechnicalAffairsDepartmentId" value="@item.TechnicalAffairsDepartmentId" class="btn btn-info">@Html.Show(Model.CanEdit)</button>
+                                            </td>
+                                            @*<td>
+                                                    @Html.ActionLink("إضافة نتائج العمل", "Edit", new { id = item.TechnicalAffairsDepartmentId }, new { @class = "btn btn-info" })
+                                                </td>*@
+
+
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">الموظفين</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="table-responsive">
+                                        <table style="overflow-x: hidden; max-height: 600px" data-order='[]' class="table table-striped table-bordered table-hover" id="dataTables-example2">
+                                            <thead>
+                                                <tr>
+                                                    <th width="20%"></th>
+                                                    <th width="20%">الاسم</th>
+                                                    <th width="20%">التصنيف</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model.EntrantsAndReviewersGrid)
+                                                {
+                                                    <tr class="odd gradeX">
+                                                        <td>@Html.RadioButtonFor(model => model.EntrantsAndReviewersId, item.EntrantsAndReviewersId, new { onclick = "hideModal('myModal');$('.modal-backdrop').remove();$(this.form).submit();", data_dismiss = "modal" })</td>
+                                                        <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
+                                                        <td>@Html.DisplayFor(modelItem => item.EntrantsAndReviewersType)</td>
+
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>                    <!-- /.panel-body -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">إغلاق</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

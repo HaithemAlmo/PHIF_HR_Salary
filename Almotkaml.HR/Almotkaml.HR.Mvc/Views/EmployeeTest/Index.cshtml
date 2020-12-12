@@ -1,0 +1,22 @@
+﻿@using Almotkaml.HR.Models;
+
+@model EmployeeTestModel
+
+@{
+    ViewBag.Title = "موظفين التجربة";
+}
+
+
+
+@using (Ajax.BeginForm(new AjaxOptions()
+{
+    UpdateTargetId = "ajax-form",
+    OnSuccess = "RedirectToIndex()",
+    OnBegin = "OnBegin()",
+    LoadingElementId = "divLoading"
+}))
+{
+    <div id="ajax-form">
+        @Html.Partial("_Form", Model, ViewData)
+    </div>
+}
